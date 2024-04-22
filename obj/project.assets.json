@@ -197,11 +197,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Admin\\source\\repos\\ConsoleApp4\\ConsoleApp4.csproj",
-      "projectName": "ConsoleApp4",
-      "projectPath": "C:\\Users\\Admin\\source\\repos\\ConsoleApp4\\ConsoleApp4.csproj",
+      "projectUniqueName": "C:\\Users\\Admin\\source\\repos\\WithoutRegex\\WithoutRegex.csproj",
+      "projectName": "WithoutRegex",
+      "projectPath": "C:\\Users\\Admin\\source\\repos\\WithoutRegex\\WithoutRegex.csproj",
       "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Admin\\source\\repos\\ConsoleApp4\\obj\\",
+      "outputPath": "C:\\Users\\Admin\\source\\repos\\WithoutRegex\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
