@@ -1,75 +1,62 @@
 ﻿using System;
-using System.IO;
-using Npgsql;
+using System.Collections.Generic;
 using static System.Console;
 
-class Program{
-    static void Main(string[] args){
-        try{
-            string filePath = "C:\\Users\\Admin\\Desktop\\-\\notes2.adr";
+namespace WorkWithString{
+public partial class ReadTextFileLines{
 
-            // Подключение к базе данных
-            string connString = "Host=localhost;Database=postgres;Username=postgres;Password=Admin123";
-            using (var conn = new NpgsqlConnection(connString)){
-                conn.Open();
+        // Количество записей в базу
+        static int id = 0;
 
-                // Чтение файла
-                string fileContent = File.ReadAllText(filePath);
+        // Путь к файлу // Замените на реальный путь к файлу
+        static string filePath = @"C:\Users\Admin\Desktop\-\notes2.adr";
 
-                // Разделение файла на строки
-                string[] lines = fileContent.Split('\n');
+        // Подключение к базе данных
+        static string connString = "Host=localhost;Database=postgres;Username=postgres;Password=Admin123";
 
-                // Переменные для значений
-                string category = null;
-                string content = null;
+        // Массив для строк из файла
+        static List<string> stringNotes = new List<string>(10000);
 
-                int id = 1;
+        public static void Main(string[] args){
 
-                // Обработка строк
-                foreach (string line in lines){
-                    // Проверка префикса "#FOLDER"
-                    if (line.StartsWith("#FOLDER")){
-                        // Извлечение значения NAME
-                        string[] parts = line.Split('=');
-                        if (parts.Length > 1)
-                        {
-                            category = parts[1].Trim(); // Удаление лишних пробелов
-                        }
+            string folderName = "";
+            string noteText = "";
+            DateTime dtCreated = DateTime.Now;
+
+            try{
+
+                // Помещает строки из файла в массив stringNotes
+                readFile();
+
+                // Перебор строк
+                foreach (string line in stringNotes) {
+
+                    if (line.StartsWith("#FOLDER"))
+                    {
+                        folderName = strFolderNameSearch(line);
                     }
 
-                    // Проверка префикса "#NOTE"
-                    else if (line.StartsWith("#NOTE")){
+                    if (line.StartsWith("#NOTE"))
+                    {
+                        noteText = strNoteNameSearch(line);
+                        dtCreated = ConvertUnixTimestampToDateTime(strNoteCreatedSearch(line));
 
-                        // Извлечение значения NAME
-                        string[] parts = line.Split('=');
-                        if (parts.Length > 1)
-                        {
-                            content = parts[1].Trim(); // Удаление лишних пробелов
-                        }
+                        // Отладка
+                        //WriteLine($"Note number: {id++}, text: {noteText}, date create: {dtCreated}, category: {folderName}");
 
-                        // Запись в базу данных (если category и content не null)
-                        if (category != null && content != null)
-                        {
-                            string insertQuery = "INSERT INTO NotionsTemp (id, Content, Category) VALUES (@id, @content, @category)";
-                            using (var cmd = new NpgsqlCommand(insertQuery, conn))
-                            {
-                                cmd.Parameters.AddWithValue("@id", id);
-                                cmd.Parameters.AddWithValue("@content", content);
-                                cmd.Parameters.AddWithValue("@category", category);
-                                cmd.ExecuteNonQuery();
-                            }
-
-                            WriteLine($"Записано: {category} - {content}"); ReadLine();
-
-                            // Сброс переменных
-                            //category = null;
-                            content = null;
-
-                            id++;
-                        }
+                        recordInDB(folderName, noteText, dtCreated);
+                        
                     }
                 }
-            }
-        }   catch (Exception e) { WriteLine(e.Message.ToString() ); ReadLine(); }
+
+                WriteLine("-----------");
+                WriteLine("END OF FILE");
+                WriteLine("-----------");
+
+                WriteLine($"String Number of : {id} was record in DB");
+                ReadLine();
+
+            } catch (Exception ex) { WriteLine(ex.Message.ToString()); ReadLine(); }
+        }
     }
 }
