@@ -9,7 +9,7 @@ public partial class ReadTextFileLines{
         static int id = 0;
 
         // Путь к файлу // Замените на реальный путь к файлу
-        static string filePath = @"C:\Users\Admin\Desktop\-\notes2.adr";
+        static string filePath = @"C:\Users\user\Desktop\Notes\notes.adr";
 
         // Подключение к базе данных
         static string connString = "Host=localhost;Database=postgres;Username=postgres;Password=Admin123";
@@ -45,7 +45,6 @@ public partial class ReadTextFileLines{
                         //WriteLine($"Note number: {id++}, text: {noteText}, date create: {dtCreated}, category: {folderName}");
 
                         recordInDB(folderName, noteText, dtCreated);
-                        
                     }
                 }
 
@@ -56,7 +55,8 @@ public partial class ReadTextFileLines{
                 WriteLine($"String Number of : {id} was record in DB");
                 ReadLine();
 
-            } catch (Exception ex) { WriteLine(ex.Message.ToString()); ReadLine(); }
+            } catch (Exception ex) { 
+                WriteLine(ex.Message.ToString()); ReadLine(); }
         }
     }
 }
